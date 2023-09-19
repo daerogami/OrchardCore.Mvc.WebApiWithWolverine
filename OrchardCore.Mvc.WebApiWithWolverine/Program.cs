@@ -1,4 +1,8 @@
 using Microsoft.OpenApi.Models;
+using Oakton;
+using OrchardCore.Mvc.WebApiWithWolverine.Endpoints;
+using Wolverine;
+using Wolverine.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +11,7 @@ builder.Services
     .AddMvc()
      // Orchard Specific Pipeline
      .ConfigureServices( services => {
-
+         services.AddEndpointsApiExplorer();
          services.AddSwaggerGen(c =>
          {
              c.EnableAnnotations();
@@ -19,6 +23,7 @@ builder.Services
          });
      })
      .Configure( (app, routes, services) => {
+         routes.MapWolverineEndpoints();
          var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
          env ??= app.ApplicationServices.GetService<IHostEnvironment>() as IWebHostEnvironment;
 
@@ -31,6 +36,12 @@ builder.Services
              });
          }
      });
+
+builder.Host.UseWolverine(options =>
+{
+    var applicationAssembly = typeof(GetAccountEndpoint).Assembly;
+    options.Discovery.IncludeAssembly(applicationAssembly);
+});
 
 var app = builder.Build();
 
@@ -47,4 +58,4 @@ app.UseStaticFiles();
 
 app.UseOrchardCore();
 
-app.Run();
+await app.RunOaktonCommands(args);
