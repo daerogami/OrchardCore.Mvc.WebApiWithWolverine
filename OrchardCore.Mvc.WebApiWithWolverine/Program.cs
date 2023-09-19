@@ -1,6 +1,5 @@
 using Microsoft.OpenApi.Models;
 using Oakton;
-using OrchardCore.Mvc.WebApiWithWolverine.Endpoints;
 using Wolverine;
 using Wolverine.Http;
 
@@ -37,11 +36,7 @@ builder.Services
          }
      });
 
-builder.Host.UseWolverine(options =>
-{
-    var applicationAssembly = typeof(GetAccountEndpoint).Assembly;
-    options.Discovery.IncludeAssembly(applicationAssembly);
-});
+builder.Host.UseWolverine();
 
 var app = builder.Build();
 
