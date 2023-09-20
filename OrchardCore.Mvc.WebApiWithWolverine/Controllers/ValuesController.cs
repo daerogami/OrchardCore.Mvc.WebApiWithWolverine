@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OrchardCore.Environment.Shell;
+using OrchardCore.Environment.Shell.Configuration;
 
 namespace OrchardCore.Mvc.WebApiWithWolverine.Controllers;
 
@@ -7,6 +9,16 @@ namespace OrchardCore.Mvc.WebApiWithWolverine.Controllers;
 [ApiController]
 public class ValuesController : ControllerBase
 {
+    // NOTE: Added Tenant-specific service from OrchardCore to deomnstrate whether tenant-specific services are available
+    private readonly IShellConfiguration _shell;
+    private readonly IShellFeaturesManager _shellFeatures;
+
+    public ValuesController(IShellConfiguration shell, IShellFeaturesManager shellFeatures)
+    {
+        _shell = shell;
+        _shellFeatures = shellFeatures;
+    }
+
     // GET: api/<ValuesController>
     [HttpGet]
     public IEnumerable<string> Get()

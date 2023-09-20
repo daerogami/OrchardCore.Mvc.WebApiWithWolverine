@@ -22,7 +22,8 @@ builder.Services
          });
      })
      .Configure( (app, routes, services) => {
-         routes.MapWolverineEndpoints();
+         // NOTE: This is where wolverine endpoints should be mapped, but the Lamar IoC isn't available here because IContainer is registered outside the tenant scope
+         //routes.MapWolverineEndpoints();
          var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
          env ??= app.ApplicationServices.GetService<IHostEnvironment>() as IWebHostEnvironment;
 
@@ -46,6 +47,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+// NOTE: This is just here to demonstrate that wolverine endpoints lack access to services registered under the OrchardCore tenant, compare with the controllers implicity registered by OrchardCore
+app.MapWolverineEndpoints();
 
 app.UseHttpsRedirection();
 
